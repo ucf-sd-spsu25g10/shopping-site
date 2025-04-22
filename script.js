@@ -106,7 +106,50 @@ function displayCart() {
 }
 
 function completePurchase() {
-    localStorage.removeItem('cart');
-    alert('Purchase completed!');
-    window.location.href = 'index.html';
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    
+    // If cart is empty, show an alert and return
+    if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+    }
+
+    // Fetch the items.json to get indices
+    fetch('items.json')
+        .then(response => response.json())
+        .then(data => {
+            // Create an array of indices for items in the cart
+            const cartIndices = cart.map(cartItem => {
+                return data.items.findIndex(item => item.name === cartItem);
+            }).filter(index => index !== -1); // Remove any -1 values (not found)
+
+            // Send the indices to the endpoint
+            return fetch('http://192.168.239.70/api/cartList', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(cartIndices)
+            });
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            
+            // Show a message that navigation will start in 5 seconds
+            alert('Purchase completed! Navigation will start in 5 seconds...');
+            
+            // Clear the cart
+            localStorage.removeItem('cart');
+            
+            // Redirect after 5 seconds
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 5000);
+        })
+        .catch(error => {
+            console.error('Error sending cart data:', error);
+            alert('There was an error starting navigation. Please try again.');
+        });
 }
