@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Load items from JSON file if we're on the items page
+    if (document.getElementById('itemsList')) {
+        loadItemsFromJson();
+    }
+
     if (document.getElementById('searchBox')) {
         document.getElementById('searchBox').addEventListener('input', function(e) {
             const searchText = e.target.value.toLowerCase();
@@ -15,6 +20,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
     updateButtonStates();
 });
+
+// Function to load items from JSON file
+function loadItemsFromJson() {
+    fetch('items.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const itemsList = document.getElementById('itemsList');
+            itemsList.innerHTML = '';
+            
+            data.items.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'item';
+                
+                const itemSpan = document.createElement('span');
+                itemSpan.textContent = item.name;
+                
+                const itemButton = document.createElement('button');
+                itemButton.textContent = 'Add to Cart';
+                itemButton.onclick = () => addToCart(item.name);
+                
+                itemDiv.appendChild(itemSpan);
+                itemDiv.appendChild(itemButton);
+                itemsList.appendChild(itemDiv);
+            });
+            
+            updateButtonStates();
+        })
+        .catch(error => {
+            console.error('Error loading items:', error);
+            document.getElementById('itemsList').innerHTML = '<p>Error loading items. Please try again later.</p>';
+        });
+}
 
 function updateButtonStates() {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
