@@ -124,7 +124,7 @@ function completePurchase() {
             }).filter(index => index !== -1); // Remove any -1 values (not found)
 
             // Send the indices to the endpoint
-            return fetch('http://192.168.239.70/api/cartList', {
+            return fetch('http://10.42.0.114/api/cartList', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -150,6 +150,6 @@ function completePurchase() {
         })
         .catch(error => {
             console.error('Error sending cart data:', error);
-            alert('There was an error starting navigation. Please try again.');
+            alert('There was an error starting navigation. Please try again.\n', error);
         });
 }

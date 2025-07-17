@@ -1,12 +1,14 @@
 {
   "items": [
-    {"name": "Item 1"},
-    {"name": "Item 2"},
-    {"name": "Item 3"},
-    {"name": "Apples"},
-    {"name": "Bananas"},
     {"name": "Milk"},
     {"name": "Bread"},
-    {"name": "Eggs"}
+    {"name": "Eggs"},
+    {"name": "Chicken"},
+    {"name": "Banana"},
+    {"name": "Cereal"},
+    {"name": "Coffee"},
+    {"name": "Carrot"},
+    {"name": "Fish"},
+    {"name": "Cheese"}
   ]
 }
