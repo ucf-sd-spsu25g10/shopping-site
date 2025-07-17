@@ -123,6 +123,12 @@ function completePurchase() {
                 return data.items.findIndex(item => item.name === cartItem);
             }).filter(index => index !== -1); // Remove any -1 values (not found)
 
+            // DEBUG - Add confirmation dialog showing indices
+            const confirmed = confirm(`Selected item numbers: ${cartIndices.join(',')}\n\nProceed with navigation?`);
+            if (!confirmed) {
+                return Promise.reject('Navigation cancelled');
+            }
+
             // Send the indices to the endpoint
             return fetch('http://10.42.0.114/api/cartList', {
                 method: 'POST',
@@ -149,6 +155,7 @@ function completePurchase() {
             }, 5000);
         })
         .catch(error => {
+            if (error === 'Navigation cancelled') return;
             console.error('Error sending cart data:', error);
             alert('There was an error starting navigation. Please try again.\n', error);
         });
